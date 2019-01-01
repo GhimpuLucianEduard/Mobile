@@ -9,7 +9,12 @@ class MainListViewModelFactory(
     private val repository: GlucoseRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
+    var instance: MainListViewModel? = null
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MainListViewModel(repository) as T
+        if (instance == null) {
+            instance = MainListViewModel(repository)
+        }
+        return instance as T
     }
 }

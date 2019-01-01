@@ -12,7 +12,6 @@
         <EditTextPreference
             android:key="EMERGENCY_EMAIL"
             android:title="Emergency email"
-
             android:dependency="USE_EMERGENCY_WARNINGS"/>
 
     </PreferenceCategory>

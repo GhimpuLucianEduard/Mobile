@@ -4,4 +4,5 @@ import com.gluco.Data.Local.GlucoseEntry
 
 interface OnMenuCardItemClickedListener {
     fun onEditClicked(glucoseEntry: GlucoseEntry)
+    fun onDeleteClicked(entry: GlucoseEntry)
 }

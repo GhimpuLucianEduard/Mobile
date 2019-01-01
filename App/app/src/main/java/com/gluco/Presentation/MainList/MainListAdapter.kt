@@ -35,7 +35,7 @@ class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenu
         val item = entries[position]
         holder.value.text = item.value.toString() + " mg/dl"
         holder.afterMeal.text = if (item.afterMeal) "After Meal" else "Before Meal"
-        holder.date.text = if (item.timestamp == null) "Undefined" else String.timeStampToDateString(item.timestamp)
+        holder.date.text = if (item.timestamp == null) "Undefined" else String.timeStampToDateString(item.timestamp!!)
         if (!item.afterMeal) {
             when {
                 item.value in 40..59 -> holder.marginBox.setBackgroundColor(Color.parseColor("#008000"))
@@ -67,9 +67,8 @@ class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenu
                 inflater.inflate(R.menu.card_popup_menu, popup.menu)
                 popup.setOnMenuItemClickListener { it ->
                     when {
-                        it.itemId == R.id.deleteItem -> GlobalScope.launch {
-                            viewModel.deleteEntry(entries[layoutPosition].id!!)
-                        }
+                        it.itemId == R.id.deleteItem -> menuListener.onDeleteClicked(entries[layoutPosition])
+
                         it.itemId == R.id.editItem -> menuListener.onEditClicked(entries[layoutPosition])
                     }
                     true

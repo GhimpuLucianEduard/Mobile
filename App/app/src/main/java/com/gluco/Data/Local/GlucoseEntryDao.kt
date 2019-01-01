@@ -1,9 +1,7 @@
 package com.gluco.Data.Local
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface GlucoseEntryDao {
@@ -13,8 +11,14 @@ interface GlucoseEntryDao {
     @Query("SELECT * FROM glucoseEntries WHERE id= (:givenId)")
     fun getOneById(givenId: Int) : GlucoseEntry
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOne(entry: GlucoseEntry)
+
     @Insert
-    fun insertAll(orders: List<GlucoseEntry>)
+    fun insertAll(entry: List<GlucoseEntry>)
+
+    @Update
+    fun update(entry: GlucoseEntry)
 
     @Query("DELETE FROM glucoseEntries")
     fun deleteAll()

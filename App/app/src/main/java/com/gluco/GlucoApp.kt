@@ -30,7 +30,7 @@ class GlucoApp : Application(), KodeinAware {
         bind() from singleton { GlucoseApiService(instance()) }
         bind<GlucoseService>() with singleton { GlucoseServiceApiImpl(instance()) }
         bind<GlucoseRepository>() with singleton { GlucoseRepositoryImpl(instance(), instance()) }
-        bind() from provider { MainListViewModelFactory(instance()) }
+        bind() from singleton { MainListViewModelFactory(instance()) }
 
     }
 

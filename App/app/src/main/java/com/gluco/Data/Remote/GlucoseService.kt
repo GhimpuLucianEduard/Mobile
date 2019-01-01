@@ -1,10 +1,11 @@
 package com.gluco.Data.Remote
 
-import androidx.lifecycle.LiveData
 import com.gluco.Data.Local.GlucoseEntry
+import io.reactivex.Observable
 
 interface GlucoseService {
-    val data: LiveData<List<GlucoseEntry>>
-    suspend fun fetchEntries()
-    suspend fun deleteEntry(id: String)
+    fun fetchEntries() : Observable<List<GlucoseEntry>>
+    fun addEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
+    fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
+    fun deleteEntry(id: String) : Observable<Any>
 }

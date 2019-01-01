@@ -1,42 +1,46 @@
 package com.gluco.Data.Repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.gluco.Data.Local.GlucoseEntry
 import com.gluco.Data.Local.GlucoseEntryDao
 import com.gluco.Data.Remote.GlucoseService
-import kotlinx.coroutines.*
+import io.reactivex.Observable
+import org.jetbrains.anko.doAsync
 
 class GlucoseRepositoryImpl(
-    private val glucoseEntrieyDao: GlucoseEntryDao,
+    private val glucoseEntriesDao: GlucoseEntryDao,
     private val glucoseService: GlucoseService
 ) : GlucoseRepository {
-    init {
-        glucoseService.data.observeForever { newData ->
-            persistFetchedGlucoseEntries(newData)
-        }
-    }
 
-    override suspend fun getEntries(): LiveData<List<GlucoseEntry>> {
-        return withContext(Dispatchers.IO) {
-            getEntriesRemote()
-            return@withContext glucoseEntrieyDao.getAllEntries()
-        }
+    val data: LiveData<List<GlucoseEntry>> = glucoseEntriesDao.getAllEntries()
+
+    override fun getEntries(): LiveData<List<GlucoseEntry>> {
+        return data
     }
 
     private fun persistFetchedGlucoseEntries(data: List<GlucoseEntry>) {
-        GlobalScope.launch(Dispatchers.IO) {
-            glucoseEntrieyDao.deleteAll()
-            glucoseEntrieyDao.insertAll(data)
+        doAsync {
+            glucoseEntriesDao.deleteAll()
+            glucoseEntriesDao.insertAll(data)
         }
     }
 
-    private suspend fun getEntriesRemote() {
-        glucoseService.fetchEntries()
+    override fun deleteEntry(entry: GlucoseEntry): Observable<Any> {
+        return glucoseService.deleteEntry(entry.apiId!!)
+            .doOnComplete { doAsync { glucoseEntriesDao.deleteLocal(entry.id!!) } }
+            .doOnError { doAsync { glucoseEntriesDao.deleteLocal(entry.id!!) } }
     }
 
-    override suspend fun deleteEntry(id: Int) {
-        glucoseService.deleteEntry(glucoseEntrieyDao.getOneById(id).apiId!!)
-        glucoseEntrieyDao.deleteLocal(id)
+    override fun addEntry(entry: GlucoseEntry): Observable<GlucoseEntry> {
+        return glucoseService.addEntry(entry)
+            .doOnNext { doAsync { glucoseEntriesDao.insertOne(it) } }
+            .doOnError { doAsync { glucoseEntriesDao.insertOne(entry) } }
     }
 
+    override fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry> {
+        return glucoseService.updateEntry(entry)
+            .doOnNext { doAsync { glucoseEntriesDao.update(it) } }
+            .doOnError { doAsync { glucoseEntriesDao.update(entry) } }
+    }
 }

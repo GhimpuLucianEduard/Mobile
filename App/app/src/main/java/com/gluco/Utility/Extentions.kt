@@ -1,6 +1,9 @@
 package com.gluco.Utility
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import java.sql.Timestamp
+import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 fun String.Companion.timeStampToDateString(date: Long): String {
@@ -11,4 +14,15 @@ fun String.Companion.timeStampToDateString(date: Long): String {
 
 fun String.Companion.empty(): String {
     return ""
+}
+
+fun Long.Companion.getDateTimeFromTimestamp(timestamp: Long): Calendar {
+    return try {
+        val calendar = Calendar.getInstance()
+        val timeZone = TimeZone.getDefault()
+        calendar.timeInMillis = timestamp
+        calendar
+    } catch (e: Exception) {
+        Calendar.getInstance()
+    }
 }

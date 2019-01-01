@@ -2,8 +2,11 @@ package com.gluco.Data.Repository
 
 import androidx.lifecycle.LiveData
 import com.gluco.Data.Local.GlucoseEntry
+import io.reactivex.Observable
 
 interface GlucoseRepository {
-    suspend fun getEntries(): LiveData<List<GlucoseEntry>>
-    suspend fun deleteEntry(id: Int)
+    fun getEntries(): LiveData<List<GlucoseEntry>>
+    fun deleteEntry(entry: GlucoseEntry) : Observable<Any>
+    fun addEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
+    fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
 }
