@@ -67,7 +67,8 @@ router.post('/signup', async (req, res, next) => {
                         try {
                             await user.save();
                             res.status(200).json({
-                                message: 'User created!'
+                                message: 'User created!',
+                                user: user
                             })
                         } catch (e) {
                             res.status(500).json(e)

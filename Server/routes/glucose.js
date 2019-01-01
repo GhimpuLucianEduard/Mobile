@@ -7,7 +7,6 @@ const checkAuth = require('../middleware/check-auth')
 router.get('/', checkAuth, (req, res, next) => {
 
     GlucoseEntry.find()
-        .select("_id value timestamp")
         .exec()
         .then(docs => {
             console.log(docs);
@@ -19,21 +18,22 @@ router.get('/', checkAuth, (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
 
     console.log(req.body);
     const entry = new GlucoseEntry({
         _id: mongoose.Types.ObjectId(),
         value: req.body.value,
+        user: req.body.user,
+        afterMeal: req.body.afterMeal,
+        note: req.body.note,
         timestamp: req.body.timestamp
     });
 
     entry.save()
         .then(result => {
             console.log(result);
-            res.status(200).json({
-                entry: result
-            });
+            res.status(200).json(result);
         })
         .catch(err => {
             console.log(err);
@@ -43,7 +43,7 @@ router.post('/', (req, res, next) => {
         });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', checkAuth, (req, res, next) => {
     const id = req.params.id;
     GlucoseEntry.findById(id)
         .exec()
@@ -65,7 +65,7 @@ router.get('/:id', (req, res, next) => {
         })
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', checkAuth, (req, res, next) => {
     const id = req.params.id;
     GlucoseEntry.remove({ _id: id })
         .exec()
@@ -77,7 +77,7 @@ router.delete('/:id', (req, res, next) => {
         });
 });
 
-router.patch('/', (req, res, next) => {
+router.patch('/', checkAuth, (req, res, next) => {
     const entry = req.body;
     GlucoseEntry.update({ _id: entry._id }, { $set: entry })
         .exec()
