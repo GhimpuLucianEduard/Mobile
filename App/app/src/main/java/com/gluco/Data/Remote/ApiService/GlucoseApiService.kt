@@ -1,6 +1,11 @@
 package com.gluco.Data.Remote.ApiService
 
+import androidx.preference.PreferenceManager
 import com.gluco.Data.Remote.DataModels.GlucoseEntryDataModel
+import com.gluco.Data.Remote.DataModels.UserDataModel
+import com.gluco.Data.Remote.DataModels.UserWithTokenDataModel
+import com.gluco.GlucoApp
+import com.gluco.Utility.empty
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -27,15 +32,21 @@ interface GlucoseApiService {
     @PATCH("/glucose")
     fun updateEntry(@Body entry: GlucoseEntryDataModel) : Observable<GlucoseEntryDataModel>
 
+    @POST("/user/login")
+    fun login(@Body userData: UserDataModel) : Observable<UserWithTokenDataModel>
+
     companion object {
         operator fun invoke(
                 connectivityInterceptor: ConnectivityInterceptor
         ): GlucoseApiService {
             val requestInterceptor = Interceptor { chain ->
 
+                val prefs = PreferenceManager.getDefaultSharedPreferences(GlucoApp.applicationContext())
+                val token = prefs.getString("AUTH_TOKEN", String.empty())
+
                 val request = chain.request()
                         .newBuilder()
-                        .addHeader("Authorization", "Barer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1Y2ZzZGZzZGlhbjIzQGEuY29tIiwidXNlcklkIjoiNWMyN2NlMmZmZGRjMGM0Mzc0ZDdhNGVlIiwiaWF0IjoxNTQ2MTE0NDI5LCJleHAiOjE2MzI1MTQ0Mjl9.g-kzQtnm3fnflXMsAbVFnrx4RajpV8wviareTsKPQw4")
+                        .addHeader("Authorization", "Bearer $token")
                         .build()
 
                 return@Interceptor chain.proceed(request)

@@ -43,6 +43,7 @@ class MainListFragment : ScopedFragment(), KodeinAware, OnMenuCardItemClickedLis
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainListViewModel::class.java)
+        (activity as? MainActivity)?.setBottomBarVisibility(true)
         bindUI()
     }
 

@@ -1,14 +1,14 @@
 package com.gluco
 
 import android.app.Application
+import android.content.Context
 import com.gluco.Data.Local.GlucoseDatabase
-import com.gluco.Data.Remote.ApiService.ConnectivityInterceptor
-import com.gluco.Data.Remote.ApiService.ConnectivityInterceptorImpl
-import com.gluco.Data.Remote.ApiService.GlucoseApiService
-import com.gluco.Data.Remote.ApiService.GlucoseServiceApiImpl
+import com.gluco.Data.Remote.ApiService.*
+import com.gluco.Data.Remote.AuthService
 import com.gluco.Data.Remote.GlucoseService
 import com.gluco.Data.Repository.GlucoseRepository
 import com.gluco.Data.Repository.GlucoseRepositoryImpl
+import com.gluco.Presentation.Auth.AuthViewModelFactory
 import com.gluco.Presentation.MainList.MainListViewModelFactory
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
@@ -29,13 +29,28 @@ class GlucoApp : Application(), KodeinAware {
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { GlucoseApiService(instance()) }
         bind<GlucoseService>() with singleton { GlucoseServiceApiImpl(instance()) }
+        bind<AuthService>() with singleton { AuthServiceApiImpl(instance()) }
         bind<GlucoseRepository>() with singleton { GlucoseRepositoryImpl(instance(), instance()) }
         bind() from singleton { MainListViewModelFactory(instance()) }
+        bind() from singleton { AuthViewModelFactory(instance()) }
 
+    }
+
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: GlucoApp? = null
+
+        fun applicationContext() : Context {
+            return instance!!.applicationContext
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
+        val context: Context = GlucoApp.applicationContext()
         AndroidThreeTen.init(this)
     }
 }

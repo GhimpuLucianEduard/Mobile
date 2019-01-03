@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.gluco.Presentation.MainActivity
 import com.gluco.Presentation.MainList.MainListViewModel
 import com.gluco.Presentation.MainList.MainListViewModelFactory
 
@@ -38,6 +39,7 @@ class StatisticsFragment : Fragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainListViewModel::class.java)
         buildChart()
+        (activity as? MainActivity)?.setBottomBarVisibility(true)
         // TODO: Use the ViewModel
     }
 

@@ -14,5 +14,9 @@
             android:title="Emergency email"
             android:dependency="USE_EMERGENCY_WARNINGS"/>
 
+        <Preference
+            android:key="LOG_OUT"
+            android:title="Log out"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

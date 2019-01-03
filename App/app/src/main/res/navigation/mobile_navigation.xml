@@ -24,11 +24,21 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.gluco.Presentation.Settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/goToLogin"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/glucoseEntryEditFragment"
         android:name="com.gluco.Presentation.MainList.GlucoseEntryEditFragment"
         android:label="Entry Info"
         tools:layout="@layout/glucose_entry_edit_fragment" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.gluco.Presentation.Auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/login_fragment" />
 
 </navigation>

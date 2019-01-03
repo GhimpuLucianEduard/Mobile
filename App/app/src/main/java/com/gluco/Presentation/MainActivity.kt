@@ -2,15 +2,23 @@ package com.gluco.Presentation
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.gluco.R
 import kotlinx.android.synthetic.main.activity_main.*
+import androidx.navigation.NavGraph
+import androidx.navigation.NavInflater
+import androidx.preference.PreferenceManager
+import com.gluco.Utility.empty
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +32,24 @@ class MainActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         bottom_nav.setupWithNavController(navController)
         NavigationUI.setupActionBarWithNavController(this, navController)
+
+
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+        val navController = navHost!!.navController
+
+        val navInflater = navController.navInflater
+        val graph = navInflater.inflate(R.navigation.mobile_navigation)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val token = prefs.getString("AUTH_TOKEN", String.empty())
+
+        if (token != String.empty()) {
+            graph.startDestination = R.id.mainListFragment
+        } else {
+            graph.startDestination = R.id.loginFragment
+        }
+
+        navController.graph = graph
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -40,5 +66,9 @@ class MainActivity : AppCompatActivity() {
 
     fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun setBottomBarVisibility(bool: Boolean) {
+        bottom_nav.visibility = if (bool) View.VISIBLE else View.GONE
     }
 }

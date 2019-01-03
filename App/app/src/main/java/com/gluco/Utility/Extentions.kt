@@ -26,3 +26,7 @@ fun Long.Companion.getDateTimeFromTimestamp(timestamp: Long): Calendar {
         Calendar.getInstance()
     }
 }
+
+fun String.Companion.isEmailValid(email: String): Boolean {
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
