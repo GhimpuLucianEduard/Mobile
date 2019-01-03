@@ -1,18 +1,23 @@
 package com.gluco.Presentation.Auth
 
 import android.content.DialogInterface
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.preference.PreferenceManager
 import com.gluco.Presentation.MainActivity
-
 import com.gluco.R
 import com.gluco.Utility.empty
 import com.gluco.Utility.isEmailValid
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.register_fragment.*
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -41,13 +46,31 @@ class RegisterFragment : Fragment(), KodeinAware {
     }
 
     private fun bindUI() {
-
+        registerBtn.onClick {
+            if (isFormValid()) {
+                viewModel.register(emailEditText.text.toString(), passwordEditText.text.toString())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        val editor = PreferenceManager.getDefaultSharedPreferences(activity).edit()
+                        editor.putString("EMERGENCY_EMAIL", emergencyEmailEditText.text.toString())
+                        editor.apply()
+                        (activity as? MainActivity)?.showToast("Account created")
+                        Navigation.findNavController(activity!!, R.id.nav_host_fragment).popBackStack()
+                    }, {
+                        Log.e("Error", "Request fail: ${it.message}")
+                        (activity as? MainActivity)?.showToast("Register failed")
+                    }, {})
+            }
+        }
     }
 
     private fun isFormValid(): Boolean {
         var msg = String.empty()
         val isEmailValid = String.isEmailValid(emailEditText.text.toString())
         if (!isEmailValid) msg += "Email invalid \n"
+        val isEmergencyEmailValid = String.isEmailValid(emergencyEmailEditText.text.toString())
+        if (!isEmergencyEmailValid) msg += "Emergency email invalid \n"
         val isPasswordValid = passwordEditText.text.toString().length >= 6
         if (!isPasswordValid) msg += "Password too short \n"
         val isConfirmValid = confirmPassEditText.text.toString().length >= 6

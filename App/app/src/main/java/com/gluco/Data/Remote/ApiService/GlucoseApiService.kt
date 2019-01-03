@@ -35,6 +35,9 @@ interface GlucoseApiService {
     @POST("/user/login")
     fun login(@Body userData: UserDataModel) : Observable<UserWithTokenDataModel>
 
+    @POST("/user/signup")
+    fun register(@Body userDataModel: UserDataModel): Observable<Any>
+
     companion object {
         operator fun invoke(
                 connectivityInterceptor: ConnectivityInterceptor

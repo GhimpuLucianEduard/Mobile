@@ -70,8 +70,10 @@ class LoginFragment : Fragment(), KodeinAware {
             }
         }
 
-        goToRegisterTextView.onTouch { v, event ->
-
+        goToRegisterTextView.setOnClickListener {
+            val action = LoginFragmentDirections.goToRegister()
+            Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+                .navigate(action)
         }
     }
 

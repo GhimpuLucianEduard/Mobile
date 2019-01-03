@@ -48,6 +48,11 @@ class MainListFragment : ScopedFragment(), KodeinAware, OnMenuCardItemClickedLis
         bindUI()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as? MainActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)

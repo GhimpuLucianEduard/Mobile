@@ -43,18 +43,18 @@ class MainActivity : AppCompatActivity() {
         val graph = navInflater.inflate(R.navigation.mobile_navigation)
 
         graph.startDestination = R.id.loginFragment
-//        navController.addOnNavigatedListener { controller, destination ->
-//            when(destination.id) {
-//                R.id.loginFragment -> {
-//                    val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-//                    val token = prefs.getString("AUTH_TOKEN", String.empty())
-//                    if (token != String.empty()) {
-//                        val action = LoginFragmentDirections.actionLoginFragmentToMainListFragment2()
-//                        navController.navigate(action)
-//                    }
-//                }
-//            }
-//        }
+        navController.addOnNavigatedListener { controller, destination ->
+            when(destination.id) {
+                R.id.loginFragment -> {
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                    val token = prefs.getString("AUTH_TOKEN", String.empty())
+                    if (token != String.empty()) {
+                        val action = LoginFragmentDirections.actionLoginFragmentToMainListFragment2()
+                        navController.navigate(action)
+                    }
+                }
+            }
+        }
 
         navController.graph = graph
     }

@@ -31,7 +31,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="goToMainList">
+                            <entry key="action_loginFragment_to_mainListFragment2">
                               <value>
                                 <LayoutPositions />
                               </value>

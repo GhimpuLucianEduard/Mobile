@@ -9,4 +9,7 @@ class AuthViewModel(private val authService: AuthService) : ViewModel() {
     fun login(email: String, password: String) : Observable<UserWithTokenDataModel>{
         return authService.login(email, password)
     }
+    fun register(email: String, password: String) : Observable<Any>{
+        return authService.register(email, password)
+    }
 }

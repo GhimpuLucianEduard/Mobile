@@ -147,16 +147,17 @@ class GlucoseEntryEditFragment : ScopedFragment(), KodeinAware {
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
             val mail = prefs.getString("EMERGENCY_EMAIL", "ghimpulucianeduard@gmail.com")
-
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mail))
-            intent.putExtra(Intent.EXTRA_SUBJECT, "URGENT")
-            intent.putExtra(Intent.EXTRA_TEXT, "Low glucose lvl: $viewModel.selectedEntry.value?.value.toString()")
-            try {
-                startActivity(Intent.createChooser(intent, "Send mail..."))
-            } catch (ex: android.content.ActivityNotFoundException) {
-                Toast.makeText(activity, "There are no email clients installed.", Toast.LENGTH_SHORT).show()
+            val shouldSend = prefs.getBoolean("USE_EMERGENCY_WARNINGS", true)
+            if (shouldSend) {
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mail))
+                intent.putExtra(Intent.EXTRA_SUBJECT, "URGENT")
+                intent.putExtra(Intent.EXTRA_TEXT, "Low glucose lvl: ${viewModel.selectedEntry.value?.value.toString()}")
+                try {
+                    startActivity(Intent.createChooser(intent, "Send mail..."))
+                } catch (ex: android.content.ActivityNotFoundException) {
+                    Toast.makeText(activity, "There are no email clients installed.", Toast.LENGTH_SHORT).show()
+                }
             }
-
         }
     }
 

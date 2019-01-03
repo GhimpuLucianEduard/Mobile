@@ -5,4 +5,5 @@ import io.reactivex.Observable
 
 interface AuthService {
     fun login(email: String, password: String) : Observable<UserWithTokenDataModel>
+    fun register(email: String, password: String) : Observable<Any>
 }
