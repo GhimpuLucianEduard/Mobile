@@ -131,12 +131,15 @@ class GlucoseEntryEditFragment : ScopedFragment(), KodeinAware {
             viewModel.addEntry(viewModel.selectedEntry.value!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    (activity as? MainActivity)?.showToast("Entry added")
+                    findNavController().navigateUp()
+                }
                 .subscribe({}, {
                     Log.e("ERROR", "Add entry request failed: ${it.message}")
                 }, {
-                    (activity as? MainActivity)?.showToast("Entry added")
+
                     Log.e("SUCCES", "Add entry request succeeded")
-                    findNavController().navigateUp()
                 })
                 .addTo(compositeDisposable)
         }
@@ -167,12 +170,14 @@ class GlucoseEntryEditFragment : ScopedFragment(), KodeinAware {
             viewModel.updateEntry(viewModel.selectedEntry.value!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally{
+                    (activity as? MainActivity)?.showToast("Entry Updated")
+                    findNavController().navigateUp()
+                }
                 .subscribe({}, {
                     Log.e("ERROR", "Update entry request failed: ${it.message}")
                 }, {
-                    (activity as? MainActivity)?.showToast("Entry Updated")
                     Log.e("SUCCES", "Update entry request succeeded")
-                    findNavController().navigateUp()
                 })
                 .addTo(compositeDisposable)
         }

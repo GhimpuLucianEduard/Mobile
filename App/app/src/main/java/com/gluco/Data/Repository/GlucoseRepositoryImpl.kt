@@ -5,7 +5,12 @@ import androidx.lifecycle.LiveData
 import com.gluco.Data.Local.GlucoseEntry
 import com.gluco.Data.Local.GlucoseEntryDao
 import com.gluco.Data.Remote.GlucoseService
+import com.gluco.GlucoApp
+import com.gluco.Utility.hasConnection
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import okhttp3.Dispatcher
 import org.jetbrains.anko.doAsync
 
 class GlucoseRepositoryImpl(
@@ -16,10 +21,29 @@ class GlucoseRepositoryImpl(
     val data: LiveData<List<GlucoseEntry>> = glucoseEntriesDao.getAllEntries()
 
     override fun getEntries(): LiveData<List<GlucoseEntry>> {
+        if ((data.value?.size == 0 || data.value == null) && hasConnection(GlucoApp.applicationContext())) {
+            Log.e("wow", "uganda")
+            getEntriesFromServer()
+        }
+        Log.e("wow", "uganda2")
+        Log.e("wow", "uganda3: ${data.value.toString()}")
         return data
     }
 
-    private fun persistFetchedGlucoseEntries(data: List<GlucoseEntry>) {
+    fun getEntriesFromServer() {
+        glucoseService.fetchEntries()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                persistFetchedGlucoseEntries(it)
+            },{
+                Log.e("Error", "Fetch data failed: ${it.message}")
+            }, {
+                Log.e("Error", "Fetched data finished")
+            })
+    }
+
+    fun persistFetchedGlucoseEntries(data: List<GlucoseEntry>) {
         doAsync {
             glucoseEntriesDao.deleteAll()
             glucoseEntriesDao.insertAll(data)

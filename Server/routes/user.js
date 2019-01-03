@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 router.post('/login', async (req, res, next) => {
-    console.log("ajfaksjfklsdajfl;ksdjf;lkasdjf")
+    
     try {
         const user = await User.findOne({email: req.body.email})
         if (user) {

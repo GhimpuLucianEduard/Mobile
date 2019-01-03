@@ -46,8 +46,11 @@ class StatisticsFragment : Fragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainListViewModel::class.java)
-        buildChart()
-        buildBarChart()
+        val size = viewModel.entries.value?.size
+        if (size != null && size >= 2) {
+            buildChart()
+            buildBarChart()
+        }
         (activity as? MainActivity)?.setBottomBarVisibility(true)
         // TODO: Use the ViewModel
     }
