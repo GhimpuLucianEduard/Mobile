@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/mainListFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/mainListFragment"
@@ -27,7 +27,10 @@
         android:label="SettingsFragment" >
         <action
             android:id="@+id/goToLogin"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/mobile_navigation"
+            app:launchSingleTop="true"/>
     </fragment>
     <fragment
         android:id="@+id/glucoseEntryEditFragment"
@@ -39,6 +42,24 @@
         android:id="@+id/loginFragment"
         android:name="com.gluco.Presentation.Auth.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/login_fragment" >
+        <action
+            android:id="@+id/goToRegister"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_loginFragment_to_mainListFragment2"
+            app:destination="@id/mainListFragment"
+            app:popUpTo="@+id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.gluco.Presentation.Auth.RegisterFragment"
+        android:label="register_fragment"
+        tools:layout="@layout/register_fragment" />
 
 </navigation>

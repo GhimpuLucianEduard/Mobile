@@ -17,6 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.navigation.NavGraph
 import androidx.navigation.NavInflater
 import androidx.preference.PreferenceManager
+import com.gluco.Presentation.Auth.LoginFragmentDirections
+import com.gluco.Presentation.MainList.MainListFragmentDirections
 import com.gluco.Utility.empty
 
 
@@ -40,14 +42,19 @@ class MainActivity : AppCompatActivity() {
         val navInflater = navController.navInflater
         val graph = navInflater.inflate(R.navigation.mobile_navigation)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val token = prefs.getString("AUTH_TOKEN", String.empty())
-
-        if (token != String.empty()) {
-            graph.startDestination = R.id.mainListFragment
-        } else {
-            graph.startDestination = R.id.loginFragment
-        }
+        graph.startDestination = R.id.loginFragment
+//        navController.addOnNavigatedListener { controller, destination ->
+//            when(destination.id) {
+//                R.id.loginFragment -> {
+//                    val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+//                    val token = prefs.getString("AUTH_TOKEN", String.empty())
+//                    if (token != String.empty()) {
+//                        val action = LoginFragmentDirections.actionLoginFragmentToMainListFragment2()
+//                        navController.navigate(action)
+//                    }
+//                }
+//            }
+//        }
 
         navController.graph = graph
     }

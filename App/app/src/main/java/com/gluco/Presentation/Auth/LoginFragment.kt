@@ -1,27 +1,26 @@
 package com.gluco.Presentation.Auth
 
 import android.content.DialogInterface
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import com.gluco.Presentation.MainActivity
-import com.gluco.Presentation.MainList.MainListViewModel
-import com.gluco.Presentation.MainList.MainListViewModelFactory
-
 import com.gluco.R
 import com.gluco.Utility.empty
 import com.gluco.Utility.isEmailValid
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.login_fragment.*
-import org.jetbrains.anko.Android
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -58,13 +57,21 @@ class LoginFragment : Fragment(), KodeinAware {
                     .subscribe({
                         Log.e("SUCCES", "Login ok ${it}")
                         val editor = PreferenceManager.getDefaultSharedPreferences(activity).edit()
-                        val mail = editor.putString("AUTH_TOKEN", it.token)
+                        editor.putString("AUTH_TOKEN", it.token)
                         editor.apply()
+
+                        val action = LoginFragmentDirections.actionLoginFragmentToMainListFragment2()
+                        Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+                            .navigate(action)
                     }, {
                         Log.e("ERROR", "Login failed: ${it.message}")
                         (activity as? MainActivity)?.showToast("Login failed")
                     }, {})
             }
+        }
+
+        goToRegisterTextView.onTouch { v, event ->
+
         }
     }
 

@@ -20,6 +20,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_list_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -45,6 +46,11 @@ class MainListFragment : ScopedFragment(), KodeinAware, OnMenuCardItemClickedLis
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainListViewModel::class.java)
         (activity as? MainActivity)?.setBottomBarVisibility(true)
         bindUI()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity as? MainActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     private fun bindUI() = launch {
