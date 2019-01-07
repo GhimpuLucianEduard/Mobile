@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { FlatList, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { FlatList, StyleSheet, Text, View, ActivityIndicator, TouchableHighlight, AsyncStorage } from 'react-native';
 import { Card, ListItem, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { withNavigation } from 'react-navigation';
+import EditButtonComponent from './EditButtonComponent';
 // import { axios } from "axios"
 
 export default class ListViewComponent extends Component {
@@ -23,6 +25,7 @@ export default class ListViewComponent extends Component {
             .then((responseJson) => {
 
                 console.log(responseJson);
+
                 this.setState({
                     data: responseJson,
                     isLoading: false
@@ -52,8 +55,10 @@ export default class ListViewComponent extends Component {
                         <Card flexDirection='column' style={styles.card}>
                             <View style={{ flex: 1, flexDirection: "row" }}>
                                 <Text style={{ flex: 1, fontSize: 32 }}>{item.value}</Text>
-                                <Icon style={{ alignSelf: "flex-end" }} name="edit" size={32} />
-                                <Icon style={{ alignSelf: "flex-end" }} name="remove" size={32} />
+                                <TouchableHighlight onPress={() => this._onPress(item)}>
+                                    <Icon style={{ alignSelf: "flex-end" }} name="edit" size={32} />
+                                </TouchableHighlight>
+                                <EditButtonComponent/>
                             </View>
                             <View style={{ flex: 1, flexDirection: "row" }}>
                                 <Text style={{ flex: 1 }}>{item.date}</Text>
@@ -64,6 +69,18 @@ export default class ListViewComponent extends Component {
                 />
             </View>
         )
+    }
+
+    _onPress = (item) => {
+        console.log(item);
+        var array = [...this.state.data];
+        var index = array.indexOf(item);
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({data: array});
+        } else {
+            console.log("NU MERGE")
+        }
     }
 }
 

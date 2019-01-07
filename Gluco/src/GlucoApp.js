@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, Button } from 'react-native';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ListViewComponent from './components/ListViewComponent';
+import GlucoseEntryDetailsComponent from './components/GlucoseEntryDetailsComponent';
 
 class MainListComponent extends Component {
   render() {
     return (
-        <ListViewComponent style={styles.listView}/>
+        <ListViewComponent style={styles.listView} />
     );
   }
 }
@@ -36,9 +37,14 @@ class SettingsComponent extends Component {
 }
 
 
+const ListViewStack = createStackNavigator({
+  Home: MainListComponent,
+  Details: GlucoseEntryDetailsComponent,
+});
+
 const TabNavigator = createMaterialBottomTabNavigator({
   Glucose: {
-    screen: MainListComponent,
+    screen: ListViewStack,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => (<Icon name="list" size={24} color={tintColor} />)
     }
@@ -75,5 +81,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  
+
 });

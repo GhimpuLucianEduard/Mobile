@@ -7,15 +7,17 @@ const userRoutes = require('./routes/user.js')
 
 const mongoose = require('mongoose');
 
-mongoose.connect(
-    'mongodb://admin:' +
-    process.env.MONGO_ATLAS_PW +
-    '@glucose-shard-00-00-b6a49.mongodb.net:27017,' +
-    'glucose-shard-00-01-b6a49.mongodb.net:27017,' +
-    'glucose-shard-00-02-b6a49.mongodb.net:27017/test?ssl=true&replicaSet=Glucose-shard-0&authSource=admin&retryWrites=true',
-    {
-        useNewUrlParser: true
-    });
+// mongoose.connect(
+//     'mongodb://admin:' +
+//     process.env.MONGO_ATLAS_PW +
+//     '@glucose-shard-00-00-b6a49.mongodb.net:27017,' +
+//     'glucose-shard-00-01-b6a49.mongodb.net:27017,' +
+//     'glucose-shard-00-02-b6a49.mongodb.net:27017/test?ssl=true&replicaSet=Glucose-shard-0&authSource=admin&retryWrites=true',
+//     {
+//         useNewUrlParser: true
+//     });
+
+mongoose.connect('mongodb://localhost:27017/myapp', {useNewUrlParser: true});
 
 
 app.use(morgan('dev'));
