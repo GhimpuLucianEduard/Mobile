@@ -6,7 +6,7 @@ import { withNavigation } from 'react-navigation';
 import EditButtonComponent from './EditButtonComponent';
 // import { axios } from "axios"
 
-export default class ListViewComponent extends Component {
+class ListViewComponent extends Component {
 
     state = {
         data: [],
@@ -56,9 +56,11 @@ export default class ListViewComponent extends Component {
                             <View style={{ flex: 1, flexDirection: "row" }}>
                                 <Text style={{ flex: 1, fontSize: 32 }}>{item.value}</Text>
                                 <TouchableHighlight onPress={() => this._onPress(item)}>
+                                    <Icon style={{ alignSelf: "flex-end" }} name="remove" size={32} />
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => { this.props.navigation.navigate('Details', { text: item}) }}>
                                     <Icon style={{ alignSelf: "flex-end" }} name="edit" size={32} />
                                 </TouchableHighlight>
-                                <EditButtonComponent/>
                             </View>
                             <View style={{ flex: 1, flexDirection: "row" }}>
                                 <Text style={{ flex: 1 }}>{item.date}</Text>
@@ -77,12 +79,14 @@ export default class ListViewComponent extends Component {
         var index = array.indexOf(item);
         if (index !== -1) {
             array.splice(index, 1);
-            this.setState({data: array});
+            this.setState({ data: array });
         } else {
             console.log("NU MERGE")
         }
     }
 }
+
+export default withNavigation(ListViewComponent);
 
 function getAfterMeal(isAfter) {
     return isAfter ? "After Meal" : "Before Meal";
