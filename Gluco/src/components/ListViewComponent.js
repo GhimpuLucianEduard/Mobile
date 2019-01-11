@@ -14,9 +14,14 @@ class ListViewComponent extends Component {
         listFlag: 0
     }
 
-    componentDidMount() {
+    _fetchData = async () => {
+        var token = await AsyncStorage.getItem('token');
 
-        instance.get('/glucose')
+        instance.get('/glucose', {
+            headers: {
+                Authorization: `Baerer ${token}`
+            }
+        })
             .then((response) => {
                 this.setState({
                     data: response.data,
@@ -30,6 +35,10 @@ class ListViewComponent extends Component {
             .then(function () {
                 console.log("final");
             });
+    }
+
+    componentDidMount() {
+        this._fetchData();
     }
 
 
@@ -112,7 +121,6 @@ export default withNavigation(ListViewComponent);
 const instance = axios.create({
     baseURL: 'http://10.0.2.2:329',
     timeout: 1000,
-    headers: { 'Authorization': 'Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1Y2ZzZGZzZGlhbjIzQGEuY29tIiwidXNlcklkIjoiNWMyN2NlMmZmZGRjMGM0Mzc0ZDdhNGVlIiwiaWF0IjoxNTQ2MTE0NDI5LCJleHAiOjE2MzI1MTQ0Mjl9.g-kzQtnm3fnflXMsAbVFnrx4RajpV8wviareTsKPQw4' }
 });
 
 function getAfterMeal(isAfter) {
@@ -123,10 +131,10 @@ function getDate(timestamp) {
 
     var date = new Date(timestamp);
     return date.getFullYear() + "-"
-    + (date.getMonth()+1)  + "-" 
-    + date.getDate() + "  "  
-    + date.getHours() + ":"  
-    + date.getMinutes();
+        + (date.getMonth() + 1) + "-"
+        + date.getDate() + "  "
+        + date.getHours() + ":"
+        + date.getMinutes();
 }
 
 const styles = StyleSheet.create({

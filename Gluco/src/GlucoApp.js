@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button } from 'react-native';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
+import { createSwitchNavigator, createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ListViewComponent from './components/ListViewComponent';
 import GlucoseEntryDetailsComponent from './components/GlucoseEntryDetailsComponent';
+import SignInComponent from './components/SignInComponent'
+import AuthLoadingScreen from './components/AuthLoadingScreen'
 
 class MainListComponent extends Component {
   render() {
@@ -67,7 +69,19 @@ const TabNavigator = createMaterialBottomTabNavigator({
     barStyle: { backgroundColor: '#f2f2f2' }
   })
 
-export default createAppContainer(TabNavigator)
+
+const AuthStack = createStackNavigator({ SignIn: SignInComponent });
+
+export default createAppContainer(createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: TabNavigator,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'AuthLoading',
+  }
+));
 
 const styles = StyleSheet.create({
   container: {

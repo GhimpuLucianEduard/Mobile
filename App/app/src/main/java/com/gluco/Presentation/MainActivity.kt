@@ -1,6 +1,8 @@
 package com.gluco.Presentation
 
 import android.content.DialogInterface
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -22,7 +24,7 @@ import com.gluco.Presentation.MainList.MainListFragmentDirections
 import com.gluco.Utility.empty
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var navController: NavController
 
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        registerReceiver(ConnectivityReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         bottom_nav.setupWithNavController(navController)
@@ -77,5 +81,27 @@ class MainActivity : AppCompatActivity() {
 
     fun setBottomBarVisibility(bool: Boolean) {
         bottom_nav.visibility = if (bool) View.VISIBLE else View.GONE
+    }
+
+    private fun showMessage(isConnected: Boolean) {
+        if (!isConnected) {
+
+            val messageToUser = "You are offline now."
+            showToast(messageToUser)
+        } else {
+            //TODO send data here
+            showToast("all ok")
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ConnectivityReceiver.connectivityReceiverListener = this
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        showMessage(isConnected)
     }
 }
