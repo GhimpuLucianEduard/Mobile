@@ -42,6 +42,21 @@ export default class GlucoseEntryDetailsComponent extends Component {
     }
   }
 
+  getDate = (timestamp) => {
+
+    var date = new Date(timestamp);
+    return date.getFullYear() + "-"
+      + (date.getMonth() + 1) + "-"
+      + date.getDate();
+  }
+
+
+  getTime = (timestamp)=> {
+
+    var date = new Date(timestamp);
+    return date.getHours() + ":"
+        + date.getMinutes();
+}
   constructor(props) {
     super(props)
 
@@ -51,11 +66,11 @@ export default class GlucoseEntryDetailsComponent extends Component {
       isFirstLoad: true,
       afterMeal: props.navigation.state.params.entry.afterMeal,
       value: `${props.navigation.state.params.entry.value}`,
-      date: "2019-01-10",
-      time: "00:00"
+      date: this.getDate(props.navigation.state.params.entry.timestamp),
+      time: this.getTime(props.navigation.state.params.entry.timestamp)
     }
 
-   //console.log(this.state.entry);
+    //console.log(this.state.entry);
   }
 
   render() {
@@ -143,9 +158,11 @@ export default class GlucoseEntryDetailsComponent extends Component {
       dateTemp.setHours(hourAr[0]);
       dateTemp.setMinutes(hourAr[1]);
       var timestampJs = dateTemp.getTime();
-      var entryFS = {...this.state.entry};
+      var entryFS = { ...this.state.entry };
       entryFS.value = valueNr;
       entryFS.timestamp = timestampJs;
+      console.log(this.state.afterMeal);
+      entryFS.afterMeal = this.state.afterMeal || false;
       //pop  request and save async
       this.props.navigation.state.params.returnData(entryFS);
       this.props.navigation.goBack();

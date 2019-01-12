@@ -18,6 +18,15 @@ class GlucoseRepositoryImpl(
     private val glucoseService: GlucoseService
 ) : GlucoseRepository {
 
+    override fun syncData(): Observable<Any> {
+        val debug = data.value
+        if (debug != null) {
+            return glucoseService.syncData(data.value!!)
+        } else {
+            return Observable.empty()
+        }
+    }
+
     val data: LiveData<List<GlucoseEntry>> = glucoseEntriesDao.getAllEntries()
 
     override fun getEntries(): LiveData<List<GlucoseEntry>> {

@@ -77,7 +77,7 @@ router.delete('/:id', checkAuth, (req, res, next) => {
             res.status(200).json(result);
         })
         .catch(err => {
-            res.status(500).json(err);
+            res.status(200).json(err);
         });
 });
 
@@ -91,6 +91,8 @@ router.patch('/', checkAuth, (req, res, next) => {
 
     entry.userId = decoded.userId;
     entry._id = (entry._id === "") ? mongoose.Types.ObjectId() : entry._id;
+
+
     GlucoseEntry.update({ _id: entry._id }, { $set: entry })
         .exec()
         .then(result => {
@@ -99,8 +101,68 @@ router.patch('/', checkAuth, (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json(err);
+            res.status(200).json(err);
         });
+
 });
+
+router.post('/sync', checkAuth, (req, res, next) => {
+
+    console.log(req.body);
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+    console.log(decoded)
+
+    const data = req.body;
+    var rez = [];
+    data.forEach(element => {
+        const entry = new GlucoseEntry({
+            _id: mongoose.Types.ObjectId(),
+            value: element.value,
+            user: decoded.userId,
+            afterMeal: element.afterMeal,
+            note: req.body.note,
+            timestamp: element.timestamp
+        });
+        rez.push(entry);
+    });
+    console.log(rez);
+    GlucoseEntry.remove({})
+        .exec()
+        .then(result => {
+            GlucoseEntry.insertMany(rez)
+                .then(result2 => {
+                    res.status(200).json(result2);
+                })
+                .catch(error2 => {
+                    res.status(500).json(error2);
+                });
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json(error)
+        });
+    // const entry = new GlucoseEntry({
+    //     _id: mongoose.Types.ObjectId(),
+    //     value: req.body.value,
+    //     user: decoded.userId,
+    //     afterMeal: req.body.afterMeal,
+    //     note: req.body.note,
+    //     timestamp: req.body.timestamp
+    // });
+
+    // entry.save()
+    //     .then(result => {
+    //         console.log(result);
+    //         res.status(200).json(result);
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(500).json({
+    //             error: err
+    //         })
+    //     });
+});
+
 
 module.exports = router;

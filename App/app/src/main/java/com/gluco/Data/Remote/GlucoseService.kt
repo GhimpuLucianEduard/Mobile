@@ -8,4 +8,5 @@ interface GlucoseService {
     fun addEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
     fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
     fun deleteEntry(id: String) : Observable<Any>
+    fun syncData(data: List<GlucoseEntry>) : Observable<Any>
 }

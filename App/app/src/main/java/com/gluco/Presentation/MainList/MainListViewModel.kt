@@ -23,5 +23,9 @@ class MainListViewModel(private val repository: GlucoseRepository) : ViewModel()
     fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry> {
         return repository.updateEntry(entry)
     }
+
+    fun syncData() : Observable<Any> {
+        return repository.syncData()
+    }
 }
 

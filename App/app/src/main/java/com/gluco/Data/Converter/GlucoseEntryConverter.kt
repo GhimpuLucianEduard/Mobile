@@ -21,5 +21,21 @@ class GlucoseEntryConverter {
                 value = model.value,
                 note = model.note ?: "")
         }
+
+        fun convertListToData(data: List<GlucoseEntry>): List<GlucoseEntryDataModel> {
+            var rez = ArrayList<GlucoseEntryDataModel>()
+            data.forEach {
+                rez.add(convert(it))
+            }
+            return rez
+        }
+
+        fun convertListToDomain(data: List<GlucoseEntryDataModel>): List<GlucoseEntry> {
+            var rez = ArrayList<GlucoseEntry>()
+            data.forEach {
+                rez.add(convert(it))
+            }
+            return rez
+        }
     }
 }

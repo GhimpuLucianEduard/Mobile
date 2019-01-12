@@ -38,6 +38,9 @@ interface GlucoseApiService {
     @POST("/user/signup")
     fun register(@Body userDataModel: UserDataModel): Observable<Any>
 
+    @POST("/glucose/sync")
+    fun syncData(@Body data: List<GlucoseEntryDataModel>): Observable<Any>
+
     companion object {
         operator fun invoke(
                 connectivityInterceptor: ConnectivityInterceptor

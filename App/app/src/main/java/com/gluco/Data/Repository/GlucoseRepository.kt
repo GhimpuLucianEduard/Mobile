@@ -9,4 +9,5 @@ interface GlucoseRepository {
     fun deleteEntry(entry: GlucoseEntry) : Observable<Any>
     fun addEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
     fun updateEntry(entry: GlucoseEntry) : Observable<GlucoseEntry>
+    fun syncData() : Observable<Any>
 }

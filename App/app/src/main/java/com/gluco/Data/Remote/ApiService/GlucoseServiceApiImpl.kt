@@ -7,6 +7,10 @@ import io.reactivex.Observable
 
 class GlucoseServiceApiImpl(private val apiService: GlucoseApiService) : GlucoseService {
 
+    override fun syncData(data: List<GlucoseEntry>): Observable<Any> {
+        return apiService.syncData(GlucoseEntryConverter.convertListToData(data))
+    }
+
     override fun fetchEntries() : Observable<List<GlucoseEntry>> {
         return apiService.getAllEntries()
             .flatMapIterable{list->list}
