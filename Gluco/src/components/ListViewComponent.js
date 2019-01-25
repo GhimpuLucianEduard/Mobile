@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, StyleSheet, Text, View, ActivityIndicator, TouchableHighlight, AsyncStorage } from 'react-native';
+import { NetInfo, FlatList, StyleSheet, Text, View, ActivityIndicator, TouchableHighlight, AsyncStorage } from 'react-native';
 import { Card, ListItem, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { withNavigation } from 'react-navigation';
@@ -56,6 +56,7 @@ class ListViewComponent extends Component {
 
     componentDidMount() {
         this._fetchData();
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     }
 
 
@@ -100,6 +101,37 @@ class ListViewComponent extends Component {
         )
     }
 
+    componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    }
+
+    handleConnectivityChange = async (isConnected) => {
+        if (isConnected) {
+            var token = await AsyncStorage.getItem('token');
+            var listOfEntries = await AsyncStorage.getItem('entries');
+            const parsed = JSON.parse(listOfEntries);
+            instance.post('/glucose/sync',
+                parsed
+                , {
+                    headers: {
+                        Authorization: `Baerer ${token}`
+                    }
+                })
+                .then((response) => {
+                    alert("data sync completed!");
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .then(function () {
+                    console.log("final");
+                });
+            console.log("online");
+        } else {
+            console.log("offline");
+        }
+    };
+
     _onPress = async (item) => {
         console.log(item);
         var array = [...this.state.data];
@@ -123,10 +155,10 @@ class ListViewComponent extends Component {
         var token = await AsyncStorage.getItem('token');
 
         instance.delete(`/glucose/${item._id}`, {
-                headers: {
-                    Authorization: `Baerer ${token}`
-                }
-            })
+            headers: {
+                Authorization: `Baerer ${token}`
+            }
+        })
             .then((response) => {
                 console.log("delete req ok")
             })
@@ -162,7 +194,7 @@ class ListViewComponent extends Component {
             entryJson._id = `${entryJson.timestamp}${entryJson.value}${rnd}`;
             console.log(entryJson);
             entries.push(entryJson)
-            
+
             instance.post('/glucose',
                 entryJson
                 , {
@@ -183,21 +215,21 @@ class ListViewComponent extends Component {
         } else {
 
             instance.patch('/glucose',
-            entryJson
-            , {
-                headers: {
-                    Authorization: `Baerer ${token}`
-                }
-            })
-            .then((response) => {
-                console.log("update req ok")
-            })
-            .catch(function (error) {
-                console.log("error");
-            })
-            .then(function () {
-                console.log("final");
-            });
+                entryJson
+                , {
+                    headers: {
+                        Authorization: `Baerer ${token}`
+                    }
+                })
+                .then((response) => {
+                    console.log("update req ok")
+                })
+                .catch(function (error) {
+                    console.log("error");
+                })
+                .then(function () {
+                    console.log("final");
+                });
             console.log("===UPDATE====");
             console.log(entryJson);
         }
