@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Emergency mode">
+
+        <SwitchPreference
+            android:key="USE_EMERGENCY_WARNINGS"
+            android:title="Send email on low glucose level"
+            android:defaultValue="true"
+            android:disableDependentsState="false"/>
+
+        <EditTextPreference
+            android:key="EMERGENCY_EMAIL"
+            android:title="Emergency email"
+            android:dependency="USE_EMERGENCY_WARNINGS"/>
+
+        <Preference
+            android:key="LOG_OUT"
+            android:title="Log out"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>
