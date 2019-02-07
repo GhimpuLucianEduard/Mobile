@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import retrofit2.http.DELETE
 
 @Dao
 interface TodoEntityDao {
@@ -16,4 +17,7 @@ interface TodoEntityDao {
 
     @Query("DELETE FROM todoEntities")
     fun deleteAll()
+
+    @Query("DELETE FROM todoEntities WHERE id = (:givenId)")
+    fun deleteLocal(givenId: Int)
 }

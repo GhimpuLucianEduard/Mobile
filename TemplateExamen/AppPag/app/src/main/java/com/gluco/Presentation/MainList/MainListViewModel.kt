@@ -6,6 +6,7 @@ import com.gluco.Data.Local.GlucoseEntry
 import com.gluco.Data.Local.NoteDomainModel
 import com.gluco.Data.Repository.TodoRepository
 import io.reactivex.Observable
+import retrofit2.Response
 
 class MainListViewModel(private val repository: TodoRepository) : ViewModel() {
 
@@ -13,6 +14,11 @@ class MainListViewModel(private val repository: TodoRepository) : ViewModel() {
     public fun getEntriesByPage(page: Int) : Observable<List<NoteDomainModel>> {
         return repository.getEntriesByPage(page)
     }
+
+    fun deleteEntry(noteDomainModel: NoteDomainModel): Observable<Response<Void>> {
+        return repository.deleteEntry(noteDomainModel)
+    }
+
     val entries = repository.getEntries()
 }
 

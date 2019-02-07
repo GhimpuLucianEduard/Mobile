@@ -1,15 +1,24 @@
 package com.gluco.Presentation.MainList
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.gluco.Data.Local.NoteDomainModel
+import com.gluco.ExamenApp
 import com.gluco.R
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.main_list_card.view.*
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+import com.gluco.Presentation.MainActivity
 
-class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenuCardItemClickedListener) : RecyclerView.Adapter<MainListAdapter.MainListAdapterViewHolder>() {
+
+class MainListAdapter(val viewModel: MainListViewModel, val menuListener: CardClickListener) : RecyclerView.Adapter<MainListAdapter.MainListAdapterViewHolder>() {
 
     private var entries: List<NoteDomainModel> = ArrayList()
 
@@ -37,8 +46,11 @@ class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenu
         val title: TextView = view.titleTextView
         val completed: TextView = view.completedTextView
 
-//        init {
-//            view.menuButton.setOnClickListener {
+        init {
+            view.deleteItem.setOnClickListener {
+                menuListener.onDeletedClicked(entries[layoutPosition])
+            }
+//            view. .setOnClickListener {
 //                val popup = PopupMenu(view.context, view.menuButton)
 //                val inflater = popup.menuInflater
 //                inflater.inflate(R.menu.card_popup_menu, popup.menu)
@@ -52,7 +64,7 @@ class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenu
 //                }
 //                popup.show()
 //            }
-//        }
+        }
     }
 }
 

@@ -13,11 +13,19 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
+import retrofit2.Response
 
 class TodoRepositoryImpl(
         private val todoEntityDao: TodoEntityDao,
         private val service: NoteService
 ) : TodoRepository {
+
+
+    override fun deleteEntry(noteDomainModel: NoteDomainModel): Observable<Response<Void>> {
+        return service.deleteEntry(noteDomainModel.id!!)
+                .doOnComplete { doAsync { todoEntityDao.deleteLocal(noteDomainModel.id!!) } }
+                .doOnError { doAsync { todoEntityDao.deleteLocal(noteDomainModel.id!!) } }
+    }
 
     @SuppressLint("CheckResult")
     override fun getEntriesByPage(page: Int): Observable<List<NoteDomainModel>> {

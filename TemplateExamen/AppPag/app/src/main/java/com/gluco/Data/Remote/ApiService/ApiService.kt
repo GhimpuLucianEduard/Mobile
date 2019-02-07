@@ -10,13 +10,11 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface ApiService {
@@ -32,6 +30,9 @@ interface ApiService {
 
     @POST("/user/signup")
     fun register(@Body userDataModel: UserDataModel): Observable<Any>
+
+    @DELETE("/note/{id}")
+    fun delete(@Path("id") id: Int): Observable<Response<Void>>
 
     companion object {
         operator fun invoke(

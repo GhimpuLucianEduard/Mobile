@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.gluco.ExamenApp
 import com.gluco.R
 import kotlinx.android.synthetic.main.activity_main.*
 import com.gluco.Presentation.MainList.MainListViewModel
@@ -75,6 +76,16 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         builder.setTitle(title)
         builder.setMessage(msg)
         builder.setNeutralButton(neutBtn, list)
+        builder.create().show()
+    }
+
+    fun showrConfirmationlAlertDialog(title: String, msg: String, yesListner: DialogInterface.OnClickListener) {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle(title)
+        builder.setMessage(msg)
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton(android.R.string.yes, yesListner)
+        builder.setNegativeButton(android.R.string.no, null)
         builder.create().show()
     }
 
