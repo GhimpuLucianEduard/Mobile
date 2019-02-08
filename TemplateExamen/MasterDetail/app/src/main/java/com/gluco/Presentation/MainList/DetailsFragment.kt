@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -23,7 +24,10 @@ import org.kodein.di.generic.instance
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.gluco.Presentation.MainActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
@@ -44,6 +48,10 @@ class DetailsFragment : ScopedFragment(), KodeinAware {
         return inflater.inflate(R.layout.details_fragment, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity as? MainActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -52,23 +60,18 @@ class DetailsFragment : ScopedFragment(), KodeinAware {
             setUpView(viewModel.selectedEntry.value!!)
         })
 
-        toolbar.setNavigationOnClickListener {
-
-        }
-
         saveBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                (activity as? MainActivity)?.showToast("entry updated!")
+                findNavController().navigateUp()
                 doAsync {
                     val sel = viewModel.selectedEntry.value
-                    viewModel.update(TaskDomainModel(sel!!.id, textEditText.text.toString(), System.currentTimeMillis(), sel!!.version))
-                    (activity as? MainActivity)?.showToast("entry updated!")
+                    viewModel.update(TaskDomainModel(sel!!.id, textEditText.text.toString(), System.currentTimeMillis(), sel!!.version, sel!!.status))
+
                 }
             }
         })
-
     }
-
-
 
     private fun setUpView(value: TaskDomainModel) {
         textEditText.setText(value.text)

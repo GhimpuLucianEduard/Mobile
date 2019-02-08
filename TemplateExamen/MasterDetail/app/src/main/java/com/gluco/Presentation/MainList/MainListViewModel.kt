@@ -12,7 +12,7 @@ class MainListViewModel(private val repository: TodoRepository) : ViewModel() {
 
     var selectedEntry: MutableLiveData<TaskDomainModel> = MutableLiveData()
 
-    fun update(value: TaskDomainModel) {
+    fun update(value: TaskDomainModel)  {
         repository.update(value)
     }
 

@@ -28,6 +28,9 @@ interface ApiService {
     @POST("/user/signup")
     fun register(@Body userDataModel: UserDataModel): Observable<Any>
 
+    @PUT("/task/{id}")
+    fun update(@Path("id") id: Int, @Body entry: TaskDataModel) : Observable<Response<TaskDataModel>>
+
     companion object {
         operator fun invoke(
                 connectivityInterceptor: ConnectivityInterceptor

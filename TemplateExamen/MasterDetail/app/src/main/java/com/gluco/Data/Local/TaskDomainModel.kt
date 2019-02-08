@@ -9,5 +9,6 @@ data class TaskDomainModel(
         var id: Int,
         var text: String,
         val updated: Long,
-        val version: Int
+        val version: Int,
+        var status: String
 )

@@ -20,7 +20,8 @@ class TodoEntryConverter {
                     id = dataModel.id,
                     text = dataModel.text,
                     updated = dataModel.updated,
-                version = dataModel.version
+                    version = dataModel.version,
+                    status = dataModel.status
             )
         }
 
@@ -29,7 +30,8 @@ class TodoEntryConverter {
                     id = domainModel.id,
                     text = domainModel.text,
                     updated = domainModel.updated,
-                version = domainModel.version
+                    version = domainModel.version,
+                    status = domainModel.status
             )
         }
     }

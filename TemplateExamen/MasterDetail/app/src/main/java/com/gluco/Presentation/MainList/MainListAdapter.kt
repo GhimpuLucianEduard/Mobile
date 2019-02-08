@@ -30,7 +30,7 @@ class MainListAdapter(val viewModel: MainListViewModel, val menuListener: OnMenu
     override fun onBindViewHolder(holder: MainListAdapterViewHolder, position: Int) {
         val item = entries[position]
         holder.title.text = item.text.toString()
-        holder.completed.text = item.updated.toString()
+        holder.completed.text = item.status
     }
 
     inner class MainListAdapterViewHolder(view: View, viewModel: MainListViewModel) : RecyclerView.ViewHolder(view) {

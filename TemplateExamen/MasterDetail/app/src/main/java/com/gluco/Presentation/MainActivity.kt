@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
         setSupportActionBar(toolbar)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainListViewModel::class.java)
-        registerReceiver(ConnectivityReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        //registerReceiver(ConnectivityReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityRecei
 
     private fun showMessage(isConnected: Boolean) {
         if (!isConnected) {
-
             val messageToUser = "You are offline now."
             showToast(messageToUser)
         }
